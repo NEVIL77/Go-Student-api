@@ -9,7 +9,7 @@ import (
 )
 
 type HTTPServer struct {
-	Addr string `yaml:"addr" env:"HTTP_ADDR" env-default:"localhost:8080"`
+	Addr string `yaml:"address" env-required:"true" env-default:"localhost:8082"`
 }
 
 type Config struct {
@@ -86,5 +86,5 @@ func MustLoad() *Config {
 
 	// cfg.Env = "production"
 	// cfg.StoragePath = "./storage"
-	// cfg.Addr = "localhost:8080"
+	// cfg.Addr = "localhost:8082"
 }

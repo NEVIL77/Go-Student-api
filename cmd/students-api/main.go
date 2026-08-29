@@ -36,16 +36,18 @@ func main() {
 		w.Write([]byte("Hello World"))
 	})
 
+	// 4 start server
 	server := http.Server{
 		Addr:    cfg.Addr,
 		Handler: router,
 	}
 
+	fmt.Println(cfg)
+	fmt.Println("started  server on ", cfg.Addr)
+
 	err := server.ListenAndServe()
 	if err != nil {
 		log.Fatal("failed to start server")
 	}
-	fmt.Println("started  server on ", cfg.Addr)
 
-	fmt.Println(cfg)
 }

@@ -74,3 +74,7 @@ Computers ultimately handle data as bytes, so Go uses `[]byte` for things like:
 - JSON data
 - Network communication
 - Images/files
+
+
+- How to start the project : 
+go run cmd/students-api/main.go -config config/local.yaml
