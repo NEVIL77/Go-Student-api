@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/NEVIL77/students-api/internal/config" // 1. loading config
+	"github.com/NEVIL77/students-api/internal/http/handlers/student"
 )
 
 func main() {
@@ -26,21 +27,23 @@ func main() {
 
 	router := http.NewServeMux() // 3. setup route
 
-	router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
+	// router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 
-		// func(w http.ResponseWriter, r *http.Request) -> This is the function that runs when the route is matched.
+	// 	// func(w http.ResponseWriter, r *http.Request) -> This is the function that runs when the route is matched.
 
-		// w is used to send a response back to the browser/client.
+	// 	// w is used to send a response back to the browser/client.
 
-		// r contains information about the incoming request
-		// Instead of giving the function a complete copy of the request, Go gives it the address/reference of the request.
-		// Why? : Because http.Request is a relatively large struct. Passing a pointer avoids making a full copy and lets the function work with the original request.
+	// 	// r contains information about the incoming request
+	// 	// Instead of giving the function a complete copy of the request, Go gives it the address/reference of the request.
+	// 	// Why? : Because http.Request is a relatively large struct. Passing a pointer avoids making a full copy and lets the function work with the original request.
 
-		// * → pointer / value at an address
-		// & → address of a variable
+	// 	// * → pointer / value at an address
+	// 	// & → address of a variable
 
-		w.Write([]byte("Hello World"))
-	})
+	// 	w.Write([]byte("Hello World"))
+	// })
+
+	router.HandleFunc("POST /api/students", student.New())
 
 	// 4 start server
 	server := http.Server{
