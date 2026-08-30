@@ -113,3 +113,5 @@ gresStutDonw
 	}
 	slog.Info("server gracefully stopped")
 
+
+client validation package : go get github.com/go-playground/validator/v10
