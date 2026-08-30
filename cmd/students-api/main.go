@@ -1,9 +1,15 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
+	"log/slog"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/NEVIL77/students-api/internal/config" // 1. loading config
 )
@@ -42,12 +48,27 @@ func main() {
 		Handler: router,
 	}
 
-	fmt.Println(cfg)
-	fmt.Println("started  server on ", cfg.Addr)
+	slog.Info("Server started", slog.String("adress", cfg.Addr))
 
-	err := server.ListenAndServe()
-	if err != nil {
-		log.Fatal("failed to start server")
+	done := make(chan os.Signal, 1)
+	signal.Notify(done, os.Interrupt, syscall.SIGTERM)
+
+	go func() {
+		if err := server.ListenAndServe(); err != nil {
+			log.Fatal("failed to start server")
+		}
+
+	}()
+
+	<-done
+	slog.Info("shutting down the server")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	if err := server.Shutdown(ctx); err != nil {
+		slog.Error("server shutdown failed", "error", err)
 	}
+	slog.Info("server gracefully stopped")
 
 }
