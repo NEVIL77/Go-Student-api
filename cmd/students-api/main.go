@@ -13,6 +13,7 @@ import (
 
 	"github.com/NEVIL77/students-api/internal/config" // 1. loading config
 	"github.com/NEVIL77/students-api/internal/http/handlers/student"
+	"github.com/NEVIL77/students-api/storage/sqlite"
 )
 
 func main() {
@@ -24,6 +25,15 @@ func main() {
 	// 4 start server
 
 	cfg := config.MustLoad() // 1. loading config
+
+	_, err := sqlite.New(cfg)
+
+	if err != nil {
+		// slog.Error("failed to start server")
+		log.Fatal(err)
+	}
+
+	slog.Info("database connected")
 
 	router := http.NewServeMux() // 3. setup route
 
