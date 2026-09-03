@@ -21,6 +21,7 @@ func New(cfg *config.Config) (*Sqlite, error) {
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS students (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	name TEXT,
+	email TEXT,
 	age INTEGER
 	)`)
 
@@ -33,7 +34,7 @@ func (s *Sqlite) CreateStudent(name string, email string, age int) (int64, error
 
 	// step to create a database
 
-	stmt, err := s.DB.Prepare("INSERT INTO students(name, eamil, age) VALUES(?,?,?)")
+	stmt, err := s.DB.Prepare("INSERT INTO students(name, email, age) VALUES(?,?,?)")
 
 	if err != nil {
 		return 0, err
