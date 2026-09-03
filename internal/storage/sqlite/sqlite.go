@@ -12,7 +12,7 @@ type Sqlite struct {
 }
 
 func New(cfg *config.Config) (*Sqlite, error) {
-	db, err := sql.Open("sqlite3", cfg.Addr)
+	db, err := sql.Open("sqlite3", cfg.Storage_path)
 
 	if err != nil {
 		return nil, err
@@ -27,4 +27,27 @@ func New(cfg *config.Config) (*Sqlite, error) {
 	return &Sqlite{
 		DB: db,
 	}, nil
+}
+
+func (s *Sqlite) CreateStudent(name string, email string, age int) (int64, error) {
+
+	// step to create a database
+
+	stmt, err := s.DB.Prepare("INSERT INTO students(name, eamil, age) VALUES(?,?,?)")
+
+	if err != nil {
+		return 0, err
+	}
+	defer stmt.Close()
+
+	result, err := stmt.Exec(name, email, age)
+	if err != nil {
+		return 0, err
+	}
+
+	lastId, err := result.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+	return lastId, nil
 }

@@ -13,7 +13,7 @@ import (
 
 	"github.com/NEVIL77/students-api/internal/config" // 1. loading config
 	"github.com/NEVIL77/students-api/internal/http/handlers/student"
-	"github.com/NEVIL77/students-api/storage/sqlite"
+	"github.com/NEVIL77/students-api/internal/storage/sqlite"
 )
 
 func main() {
@@ -26,7 +26,7 @@ func main() {
 
 	cfg := config.MustLoad() // 1. loading config
 
-	_, err := sqlite.New(cfg)
+	storage, err := sqlite.New(cfg)
 
 	if err != nil {
 		// slog.Error("failed to start server")
@@ -53,7 +53,7 @@ func main() {
 	// 	w.Write([]byte("Hello World"))
 	// })
 
-	router.HandleFunc("POST /api/students", student.New())
+	router.HandleFunc("POST /api/students", student.New(storage))
 
 	// 4 start server
 	server := http.Server{

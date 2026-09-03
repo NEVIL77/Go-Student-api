@@ -7,12 +7,13 @@ import (
 	"log/slog"
 	"net/http"
 
+	"github.com/NEVIL77/students-api/internal/storage"
 	"github.com/NEVIL77/students-api/internal/types"
 	"github.com/NEVIL77/students-api/internal/utils/response"
 	"github.com/go-playground/validator/v10"
 )
 
-func New() http.HandlerFunc {
+func New(storage storage.Storage) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		slog.Info("creating a student")
@@ -36,6 +37,21 @@ func New() http.HandlerFunc {
 			return
 		}
 
-		response.WriteJson(w, http.StatusCreated, student)
+		lastId, err := storage.CreateStudent(
+			student.Name,
+			student.Email,
+			student.Age,
+		)
+
+		slog.Info("student created", slog.Int64("id", lastId))
+
+		if err != nil {
+			response.WriteJson(w, http.StatusInternalServerError, err)
+			return
+		}
+
+		response.WriteJson(w, http.StatusCreated, map[string]int64{
+			"id": lastId,
+		})
 	}
 }
